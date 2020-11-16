@@ -115,7 +115,7 @@ DATABASES = {
         'USER': 'djreactadmin',
         'PASSWORD': '5451051atabar',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
     }
 }
 
