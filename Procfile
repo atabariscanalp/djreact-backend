@@ -1,1 +1,1 @@
-web: gunicorn rateapp.wsgi --log-file -
+web: gunicorn rateapp.wsgi 
