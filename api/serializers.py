@@ -254,6 +254,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 
 class PostDetailSerializer(serializers.ModelSerializer):
     image = SerializerMethodField()
+    video = SerializerMethodField()
     author = SerializerMethodField()
     comments = SerializerMethodField()
     avg_rate = serializers.ReadOnlyField()
@@ -261,7 +262,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     rated_by = SerializerMethodField()
     class Meta:
         model = Post
-        fields = ('author', 'image', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
+        fields = ('author', 'image', 'video', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
 
     def get_image(self, obj):
         try:
@@ -270,6 +271,13 @@ class PostDetailSerializer(serializers.ModelSerializer):
             image = None
         return image
 
+    def get_video(self, obj):
+        try:
+            video = obj.video.url
+        except:
+            video = None
+        return video
+    
     def get_author(self, obj):
         return obj.author.username
 
@@ -289,6 +297,7 @@ class PostListSerializer(serializers.ModelSerializer):
     # url = post_detail_url
     author = SerializerMethodField()
     image = SerializerMethodField()
+    video = SerializerMethodField()
     comments = SerializerMethodField()
     avg_rate = serializers.ReadOnlyField()
     rate_count = serializers.ReadOnlyField()
@@ -296,7 +305,7 @@ class PostListSerializer(serializers.ModelSerializer):
     category = SerializerMethodField()
     class Meta:
         model = Post
-        fields = ('id','title', 'created_at', 'image', 'category', 'author', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
+        fields = ('id','title', 'created_at', 'image', 'video', 'category', 'author', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
 
     def get_author(self, obj):
         serializer = UserSerializer(obj.author, read_only=True)
@@ -308,6 +317,13 @@ class PostListSerializer(serializers.ModelSerializer):
         except:
             image = None
         return image
+    
+    def get_video(self, obj):
+        try:
+            video = obj.video.url
+        except:
+            video = None
+        return video
 
     def get_comments(self, obj):
         queryset = obj.comments.filter(parent__isnull=True)
