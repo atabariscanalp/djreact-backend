@@ -43,6 +43,7 @@ from .serializers import (PostDetailSerializer,
                           CommentChildSerializer,
                           UserLoginSerializer,
                           UserSerializer,
+                          UserEditSerializer,
                           ProfileDetailSerializer,
                           ProfilePhotoUploadSerializer)
 
@@ -374,6 +375,16 @@ class UserDetailAPIView(generics.RetrieveAPIView):
         obj = get_object_or_404(get_user_model(),username=self.kwargs['username'])
         return obj
 
+class UserEditAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserEditSerializer
+    queryset = CustomUser.objects.all()
+    lookup_url_kwarg = 'pk'
+  
+    def get_object(self):
+           queryset = self.get_queryset()
+           user = get_object_or_404(CustomUser, id=self.kwargs.get('pk'))
+           return obj
+      
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileDetailSerializer
     lookup_field = 'username'
