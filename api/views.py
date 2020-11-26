@@ -378,12 +378,9 @@ class UserDetailAPIView(generics.RetrieveAPIView):
 class UserEditAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserEditSerializer
     queryset = CustomUser.objects.all()
-    lookup_url_kwarg = 'pk'
   
     def get_object(self):
-           queryset = self.get_queryset()
-           user = get_object_or_404(CustomUser, id=self.kwargs.get('pk'))
-           return obj
+           return self.request.user
       
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileDetailSerializer
