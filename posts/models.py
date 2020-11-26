@@ -35,7 +35,9 @@ class Category(models.Model):
 
 class Post(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='posts')
-    image = models.ImageField(upload_to=upload_location, blank=True, null=True, verbose_name="Image")
+    image = models.ImageField(upload_to=upload_location, blank=True, null=True, verbose_name="Image", width_field='image_width', height_field='image_height')
+    image_width = models.IntegerField(default=0)
+    image_height = models.IntegerField(default=0)
     video = models.FileField(upload_to=upload_location_video, blank=True, null=True, verbose_name="Video")
     title = models.TextField(max_length=90, null=False, blank=False, unique=True, default="title", verbose_name="Title")
     slug = models.SlugField(unique=True, blank=False, null=False)

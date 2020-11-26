@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate
 
 from dj_rest_auth.serializers import UserDetailsSerializer
 
+import cv2
+
 from posts.models import Post, Rate
 from comments.models import Comment, CommentRate
 from users.models import CustomUser, Profile
@@ -255,6 +257,8 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 class PostDetailSerializer(serializers.ModelSerializer):
     image = SerializerMethodField()
     video = SerializerMethodField()
+    video_width = SerializerMethodField()
+    video_height = SerializerMethodField()
     author = SerializerMethodField()
     comments = SerializerMethodField()
     avg_rate = serializers.ReadOnlyField()
@@ -262,7 +266,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     rated_by = SerializerMethodField()
     class Meta:
         model = Post
-        fields = ('author', 'image', 'video', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
+        fields = ('author', 'image', 'image_width', 'image_height', 'video', 'video_width', 'video_height', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
 
     def get_image(self, obj):
         try:
@@ -277,7 +281,21 @@ class PostDetailSerializer(serializers.ModelSerializer):
         except:
             video = None
         return video
-    
+
+    def get_video_width(self, obj):
+        if(obj.video):
+            vid = cv2.VideoCapture(obj.video.url)
+            width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+            return width
+        return 0
+
+    def get_video_height(self, obj):
+        if(obj.video):
+            vid = cv2.VideoCapture(obj.video.url)
+            height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            return height
+        return 0
+
     def get_author(self, obj):
         return obj.author.username
 
@@ -317,7 +335,7 @@ class PostListSerializer(serializers.ModelSerializer):
         except:
             image = None
         return image
-    
+
     def get_video(self, obj):
         try:
             video = obj.video.url
