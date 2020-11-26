@@ -121,6 +121,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_profile_photo(self, obj):
         return obj.profile.profile_photo.url if obj.profile.profile_photo else ""
+    
+class UserEditSerializer(serializer.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'first_name', 'last_name')
 
 
 class ProfilePhotoUploadSerializer(serializers.ModelSerializer):
