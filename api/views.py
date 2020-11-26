@@ -378,7 +378,8 @@ class UserDetailAPIView(generics.RetrieveAPIView):
 class UserEditAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserEditSerializer
     queryset = CustomUser.objects.all()
-  
+    permission_classes = [IsAuthenticated | IsAdminUser]
+    
     def get_object(self):
            return self.request.user
       
