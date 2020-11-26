@@ -316,6 +316,8 @@ class PostListSerializer(serializers.ModelSerializer):
     author = SerializerMethodField()
     image = SerializerMethodField()
     video = SerializerMethodField()
+    video_width = SerializerMethodField()
+    video_height = SerializerMethodField()
     comments = SerializerMethodField()
     avg_rate = serializers.ReadOnlyField()
     rate_count = serializers.ReadOnlyField()
@@ -323,7 +325,7 @@ class PostListSerializer(serializers.ModelSerializer):
     category = SerializerMethodField()
     class Meta:
         model = Post
-        fields = ('id','title', 'created_at', 'image', 'video', 'category', 'author', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
+        fields = ('id','title', 'created_at', 'image', 'image_width', 'image_height', 'video', 'video_width', 'video_height', 'category', 'author', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
 
     def get_author(self, obj):
         serializer = UserSerializer(obj.author, read_only=True)
@@ -342,6 +344,20 @@ class PostListSerializer(serializers.ModelSerializer):
         except:
             video = None
         return video
+
+    def get_video_width(self, obj):
+        if(obj.video):
+            vid = cv2.VideoCapture(obj.video.url)
+            width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+            return width
+        return 0
+
+    def get_video_height(self, obj):
+        if(obj.video):
+            vid = cv2.VideoCapture(obj.video.url)
+            height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            return height
+        return 0
 
     def get_comments(self, obj):
         queryset = obj.comments.filter(parent__isnull=True)
