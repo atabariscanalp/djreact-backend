@@ -1,1 +1,1 @@
-web: gunicorn rateapp.wsgi 
+web: gunicorn rateapp.wsgi --timeout 15
