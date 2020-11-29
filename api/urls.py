@@ -34,7 +34,7 @@ urlpatterns = [
     path('p/<int:categoryId>', PostByCategoryListAPIView.as_view(), name='post-by-category'),
     path('p/create/', PostCreateAPIView.as_view(), name='post-create'),
     path('p/rate/<int:post_id>', PostRateAPIView.as_view(), name='post-rate'),
-    path('p/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
+    path('p/detail/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
     path('p/delete/<slug:slug>', PostDeleteAPIView.as_view(), name='post-delete'),
     path('p/rate/update/<int:post_id>', PostRateUpdateAPIView.as_view(), name='post-rate-update'),
     #COMMENT
