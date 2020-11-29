@@ -183,14 +183,14 @@ class PostCreateAPIView(generics.CreateAPIView):
 
 class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostDetailSerializer
+    serializer_class = PostListSerializer
     lookup_field = ('pk')
     permission_classes = [AllowAny]
 
 
 class PostDeleteAPIView(generics.DestroyAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostDetailSerializer
+    serializer_class = PostListSerializer
     permission_classes = [IsAuthenticated | IsAdminUser]
     lookup_field = 'slug'
 
