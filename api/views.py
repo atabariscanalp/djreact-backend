@@ -184,7 +184,7 @@ class PostCreateAPIView(generics.CreateAPIView):
 class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    lookup_field = ('slug')
+    lookup_field = ('pk')
     permission_classes = [AllowAny]
 
 
