@@ -303,7 +303,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return 0
 
     def get_author(self, obj):
-        return obj.author.username
+        serializer = UserSerializer(obj.author, read_only=True)
+        return serializer.data
 
     def get_comments(self, obj):
         queryset = obj.comments.filter(parent__isnull=True)
