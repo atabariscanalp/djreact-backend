@@ -269,9 +269,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
     avg_rate = serializers.ReadOnlyField()
     rate_count = serializers.ReadOnlyField()
     rated_by = SerializerMethodField()
+    category = SerializerMethodField()
     class Meta:
         model = Post
-        fields = ('author', 'image', 'image_width', 'image_height', 'video', 'video_width', 'video_height', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
+        fields = ('id', 'author', 'image', 'image_width', 'image_height', 'video', 'video_width', 'video_height', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
 
     def get_image(self, obj):
         try:
@@ -315,6 +316,9 @@ class PostDetailSerializer(serializers.ModelSerializer):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
         return ratedata
+        
+    def get_category(self, obj):
+        return obj.category.title
 
 class PostListSerializer(serializers.ModelSerializer):
     # url = post_detail_url
