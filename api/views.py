@@ -45,6 +45,7 @@ from .serializers import (PostDetailSerializer,
                           UserSerializer,
                           UserEditSerializer,
                           ProfileDetailSerializer,
+                          ProfileListSerializer,
                           ProfilePhotoUploadSerializer)
 
 
@@ -345,7 +346,7 @@ class CommentDetailAPIView(generics.RetrieveAPIView):
 
 class UserListAPIView(generics.ListAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileDetailSerializer
+    serializer_class = ProfileListSerializer
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Profile.objects.all()
