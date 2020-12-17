@@ -133,6 +133,11 @@ class ProfilePhotoUploadSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('profile_photo',)
 
+class ProfileListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('id', 'profile_photo')
+        
 class ProfileDetailSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
     post_num = SerializerMethodField()
