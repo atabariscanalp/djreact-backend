@@ -231,7 +231,7 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_replies(self, obj):
         if obj.is_parent:
             data = CommentChildSerializer(obj.children(), many=True).data
-            dict = {v["user_id"]: v for v in data}
+            dict = {v["id"]: v for v in data}
             return dict
         return None
 
