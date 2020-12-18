@@ -324,7 +324,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        return ratedata
+        dict = {v["user_id"]: v for v in ratedata}
+        return dict
         
     def get_category(self, obj):
         return obj.category.title
@@ -391,7 +392,7 @@ class PostListSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        dict = {v["id"]: v for v in ratedata}
+        dict = {v["user_id"]: v for v in ratedata}
         return dict
 
 class PostCreateSerializer(serializers.ModelSerializer):
