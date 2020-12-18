@@ -195,7 +195,7 @@ class CommentChildSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        dict = {v["id"]: v for v in ratedata}
+        dict = {v["user_id"]: v for v in ratedata}
         return dict
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -225,13 +225,13 @@ class CommentSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        dict = {v["id"]: v for v in ratedata}
+        dict = {v["user_id"]: v for v in ratedata}
         return dict
 
     def get_replies(self, obj):
         if obj.is_parent:
             data = CommentChildSerializer(obj.children(), many=True).data
-            dict = {v["id"]: v for v in data}
+            dict = {v["user_id"]: v for v in data}
             return dict
         return None
 
