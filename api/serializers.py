@@ -182,7 +182,7 @@ class CommentChildSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField()
     class Meta:
         model = Comment
-        fields = ('author', 'content', 'id','parent_id', 'avg_rate', 'rate_count', 'rated_by')
+        fields = ('author', 'user_id', 'content', 'id','parent_id', 'avg_rate', 'rate_count', 'rated_by')
 
     def get_author(self, obj):
         serializer = UserSerializer(obj.author, read_only=True)
