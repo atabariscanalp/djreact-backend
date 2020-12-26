@@ -26,6 +26,7 @@ from dj_rest_auth.app_settings import (JWTSerializer, TokenSerializer,
 from allauth.account.utils import complete_signup
 from allauth.account import app_settings as allauth_settings
 
+from .notifications import send_notification
 from .permissions import IsOwnerOrReject
 from posts.models import Post, Rate, Category
 from users.models import CustomUser, Profile
@@ -203,6 +204,10 @@ class PostRateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
+        title = 'Rateet'
+        message = '{username} rated your post!'.format(username=self.request.user.username)
+        data = { postId: post.id }
+        send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, post=post)
 
     # def post(self, request, *args, **kwargs):
