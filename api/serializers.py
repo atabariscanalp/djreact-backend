@@ -121,6 +121,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_profile_photo(self, obj):
         return obj.profile.profile_photo.url if obj.profile.profile_photo else ""
+    
+class UserEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'first_name', 'last_name')
 
 
 class ProfilePhotoUploadSerializer(serializers.ModelSerializer):
@@ -128,6 +133,14 @@ class ProfilePhotoUploadSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('profile_photo',)
 
+class ProfileListSerializer(serializers.ModelSerializer):
+    profile_photo = SerializerMethodField()
+    class Meta:
+        model = Profile
+        fields = ('id', 'profile_photo')
+    def get_profile_photo(self, obj):
+        return obj.profile_photo.url if obj.profile_photo else ""
+        
 class ProfileDetailSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
     post_num = SerializerMethodField()
@@ -166,9 +179,10 @@ class CommentChildSerializer(serializers.ModelSerializer):
     avg_rate = serializers.ReadOnlyField()
     rated_by = SerializerMethodField()
     rate_count = serializers.ReadOnlyField()
+    user_id = serializers.ReadOnlyField()
     class Meta:
         model = Comment
-        fields = ('author', 'content', 'id','parent_id', 'avg_rate', 'rate_count', 'rated_by')
+        fields = ('author', 'user_id', 'content', 'id','parent_id', 'avg_rate', 'rate_count', 'rated_by')
 
     def get_author(self, obj):
         serializer = UserSerializer(obj.author, read_only=True)
@@ -182,8 +196,11 @@ class CommentChildSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        dict = {v["id"]: v for v in ratedata}
+        dict = {v["user_id"]: v for v in ratedata}
         return dict
+    
+    def get_user_id(self, obj):
+        return obj.author.pk
 
 class CommentSerializer(serializers.ModelSerializer):
     reply_count = SerializerMethodField()
@@ -212,13 +229,13 @@ class CommentSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        dict = {v["id"]: v for v in ratedata}
+        dict = {v["user_id"]: v for v in ratedata}
         return dict
 
     def get_replies(self, obj):
         if obj.is_parent:
             data = CommentChildSerializer(obj.children(), many=True).data
-            dict = {v["id"]: v for v in data}
+            dict = {v["author"]["pk"]: v for v in data}
             return dict
         return None
 
@@ -264,9 +281,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
     avg_rate = serializers.ReadOnlyField()
     rate_count = serializers.ReadOnlyField()
     rated_by = SerializerMethodField()
+    category = SerializerMethodField()
     class Meta:
         model = Post
-        fields = ('author', 'image', 'image_width', 'image_height', 'video', 'video_width', 'video_height', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
+        fields = ('id', 'author', 'image', 'image_width', 'image_height', 'video', 'video_width', 'video_height', 'title', 'category','created_at', 'rate_count', 'rated_by', 'avg_rate', 'slug', 'comments')
 
     def get_image(self, obj):
         try:
@@ -297,7 +315,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return 0
 
     def get_author(self, obj):
-        return obj.author.username
+        serializer = UserSerializer(obj.author, read_only=True)
+        return serializer.data
 
     def get_comments(self, obj):
         queryset = obj.comments.filter(parent__isnull=True)
@@ -309,7 +328,11 @@ class PostDetailSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        return ratedata
+        dict = {v["user_id"]: v for v in ratedata}
+        return dict
+        
+    def get_category(self, obj):
+        return obj.category.title
 
 class PostListSerializer(serializers.ModelSerializer):
     # url = post_detail_url
@@ -373,7 +396,7 @@ class PostListSerializer(serializers.ModelSerializer):
         for rate in obj.rates.filter(is_active=True):
             rates.append(rate)
         ratedata = RateSerializer(rates, many=True, read_only=True).data
-        dict = {v["id"]: v for v in ratedata}
+        dict = {v["user_id"]: v for v in ratedata}
         return dict
 
 class PostCreateSerializer(serializers.ModelSerializer):

@@ -44,7 +44,9 @@ from .serializers import (PostDetailSerializer,
                           CommentChildSerializer,
                           UserLoginSerializer,
                           UserSerializer,
+                          UserEditSerializer,
                           ProfileDetailSerializer,
+                          ProfileListSerializer,
                           ProfilePhotoUploadSerializer)
 
 
@@ -183,14 +185,14 @@ class PostCreateAPIView(generics.CreateAPIView):
 
 class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostDetailSerializer
-    lookup_field = ('slug')
+    serializer_class = PostListSerializer
+    lookup_field = ('pk')
     permission_classes = [AllowAny]
 
 
 class PostDeleteAPIView(generics.DestroyAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostDetailSerializer
+    serializer_class = PostListSerializer
     permission_classes = [IsAuthenticated | IsAdminUser]
     lookup_field = 'slug'
 
@@ -349,7 +351,7 @@ class CommentDetailAPIView(generics.RetrieveAPIView):
 
 class UserListAPIView(generics.ListAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileDetailSerializer
+    serializer_class = ProfileListSerializer
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Profile.objects.all()
@@ -379,6 +381,14 @@ class UserDetailAPIView(generics.RetrieveAPIView):
         obj = get_object_or_404(get_user_model(),username=self.kwargs['username'])
         return obj
 
+class UserEditAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserEditSerializer
+    queryset = CustomUser.objects.all()
+    permission_classes = [IsAuthenticated | IsAdminUser]
+    
+    def get_object(self):
+           return self.request.user
+      
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileDetailSerializer
     lookup_field = 'username'

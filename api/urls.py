@@ -20,6 +20,7 @@ from .views import (PostListAPIView,
                     UserDetailAPIView,
                     UserListAPIView,
                     GetUserAPIView,
+                    UserEditAPIView,
                     CheckEmailExistsAPIView)
 
 from rest_framework_simplejwt.views import (
@@ -33,7 +34,7 @@ urlpatterns = [
     path('p/<int:categoryId>', PostByCategoryListAPIView.as_view(), name='post-by-category'),
     path('p/create/', PostCreateAPIView.as_view(), name='post-create'),
     path('p/rate/<int:post_id>', PostRateAPIView.as_view(), name='post-rate'),
-    path('p/<slug:slug>/', PostDetailAPIView.as_view(), name='post-detail'),
+    path('p/detail/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
     path('p/delete/<slug:slug>', PostDeleteAPIView.as_view(), name='post-delete'),
     path('p/rate/update/<int:post_id>', PostRateUpdateAPIView.as_view(), name='post-rate-update'),
     #COMMENT
@@ -50,6 +51,7 @@ urlpatterns = [
     path('user/<str:username>', UserDetailAPIView.as_view(), name='user-detail'),
     path('user/<str:username>/profile', ProfileDetailAPIView.as_view(), name='profile'),
     path('user/profile/addphoto', ProfilePhotoUploadAPIView.as_view(), name='profile-add-photo'),
+    path('user/edit/', UserEditAPIView.as_view(), name='user-edit'),
     #TOKEN
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

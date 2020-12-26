@@ -268,7 +268,7 @@ REST_USE_JWT = True
 
 #ALLAUTH settings
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION = "none" #make it mandatory or optional in production!! use amazon-ses or sendinblue
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 500
 ACCOUNT_SESSION_REMEMBER = True
