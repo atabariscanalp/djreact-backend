@@ -208,7 +208,7 @@ class PostRateAPIView(generics.CreateAPIView):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
         title = 'Rateet'
         message = '{username} rated your post!'.format(username=self.request.user.username)
-        data = { postId: post.id }
+        data = { 'postId': post.id }
         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, post=post)
 
