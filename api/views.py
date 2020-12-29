@@ -301,7 +301,10 @@ class CommentCreateAPIView(generics.CreateAPIView):
         obj = Comment.objects.create(author=user, post=post, content=content)
         obj.save()
         serializer = CommentSerializer(obj)
-        response = {'id': obj.id, 'content': content, 'author': user.username,  'reply_count': 0, 'replies':[]}
+        title = 'Rateet'
+        message = '{username} commented to your post!'.format(username=user.username)
+        data = { 'postId': post.id }
+        send_notification(user_id=post.author.id, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CommentReplyCreateAPIView(generics.CreateAPIView):
