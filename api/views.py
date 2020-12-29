@@ -320,7 +320,7 @@ class CommentReplyCreateAPIView(generics.CreateAPIView):
         title = parent.author.username
         message = '{username} replied to your comment!'.format(username=user.username)
         data = { 'parentId': parent.id }
-        send_notification(user_id=post.author.pk, title=title, message=message, data=data)
+        send_notification(user_id=parent.author.pk, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
