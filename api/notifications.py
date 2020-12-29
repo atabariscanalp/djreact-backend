@@ -3,8 +3,8 @@ from users.models import CustomUser
 
 def send_notification(user_id, title, message, data):
    try:
-      user = CustomUser.objects.get(pk=user_id)
-      device = FCMDevice.objects.get(user=user)
+      user = CustomUser.objects.all().filter(pk=user_id).first()
+      device = FCMDevice.objects.all().filter(user=user).first()
 #       kwargs = {
 #         "content_available": True,
 #         'extra_kwargs': {"priority": "high", "mutable_content": True, 'notification': data },
