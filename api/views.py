@@ -206,31 +206,12 @@ class PostRateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
-        title = 'Rateet'
+        title = post.author.username
         message = '{username} rated your post!'.format(username=self.request.user.username)
         data = { 'postId': post.id }
         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, post=post)
-
-    # def post(self, request, *args, **kwargs):
-    #     post_id = kwargs.get('post_id')
-    #     if not post_id:
-    #         return Response({
-    #             'detail': 'Post was not provided!'
-    #         }, status=status.HTTP_400_BAD_REQUEST)
-    #     post = get_object_or_404(Post, id=post_id)
-    #     user = request.user
-    #     if not user:
-    #         return Response({
-    #             'detail': 'User was not provided!'
-    #         }, status=status.HTTP_400_BAD_REQUEST)
-    #     rate = request.data.dict().get("rate")
-    #     obj = Rate.objects.create(rater=user, post=post, rate=rate)
-    #     obj.save()
-    #     response = {'user': user.username, 'post': post.title, 'rate': rate}
-    #     print(response)
-    #     return Response(response, status=status.HTTP_201_CREATED)
-
+        
 
 class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Rate.objects.all()
@@ -244,6 +225,10 @@ class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
          obj = queryset.filter(post=post, rater=self.request.user).get()
          serializer = PostRateSerializer(obj)
+         title = post.author.username
+         message = '{username} rated your post!'.format(username=self.request.user.username) #its ??
+         data = { 'postId': post.id }
+         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
          return obj
 
 class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -258,6 +243,10 @@ class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          comment = get_object_or_404(Comment, id=self.kwargs.get('comment_id'))
          obj = queryset.filter(comment=comment, rater=self.request.user).get()
          serializer = CommentRateSerializer(obj)
+         title = comment.author.username
+         message = '{username} rated your comment!'.format(username=self.request.user.username)
+         data = { 'commentId': comment.id }
+         send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
          return obj
 
 class CommentAPIView(generics.ListAPIView):
@@ -301,7 +290,7 @@ class CommentCreateAPIView(generics.CreateAPIView):
         obj = Comment.objects.create(author=user, post=post, content=content)
         obj.save()
         serializer = CommentSerializer(obj)
-        title = 'Rateet'
+        title = post.author.username
         message = '{username} commented to your post!'.format(username=user.username)
         data = { 'postId': post.id }
         send_notification(user_id=post.author.id, title=title, message=message, data=data)
@@ -328,6 +317,10 @@ class CommentReplyCreateAPIView(generics.CreateAPIView):
         content = request.data.get('content')
         obj = Comment.objects.create(author=user, post=parent.post, content=content, parent=parent)
         serializer = CommentChildSerializer(obj)
+        title = parent.author.username
+        message = '{username} replied to your comment!'.format(username=user.username)
+        data = { 'parentId': parent.id }
+        send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -340,6 +333,10 @@ class CommentRateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         comment = get_object_or_404(Comment, id=self.kwargs.get('comment_id'))
+        title = comment.author.username
+        message = '{username} rated your comment!'.format(username=self.request.user.username)
+        data = { 'commentId': comment.id }
+        send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, comment=comment)
 
 class CommentDeleteAPIView(generics.DestroyAPIView):
