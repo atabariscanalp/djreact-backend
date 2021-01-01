@@ -135,11 +135,14 @@ class ProfilePhotoUploadSerializer(serializers.ModelSerializer):
 
 class ProfileListSerializer(serializers.ModelSerializer):
     profile_photo = SerializerMethodField()
+    username = SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ('id', 'profile_photo')
+        fields = ('id', 'profile_photo', 'username')
     def get_profile_photo(self, obj):
         return obj.profile_photo.url if obj.profile_photo else ""
+    def get_username(self, obj):
+        return obj.user.username
         
 class ProfileDetailSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
