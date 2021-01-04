@@ -7,9 +7,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
 
-from dj_rest_auth.serializers import UserDetailsSerializer
-
-from rest_auth.serializers import PasswordResetSerializer
+from dj_rest_auth.serializers import UserDetailsSerializer, PasswordResetSerializer
 
 import cv2
 
