@@ -202,13 +202,22 @@ USE_TZ = True
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_URL = '/media/'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = 'abtestcanalp@gmail.com'
+#EMAIL_HOST_PASSWORD = '5451051atabar'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_USE_SSL = False
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'abtestcanalp@gmail.com'
-EMAIL_HOST_PASSWORD = '5451051atabar'
+EMAIL_HOST_USER = 'no.reply.rateet@gmail.com'
+EMAIL_HOST_PASSWORD = 'dlelvoxisejrkmgn'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'Rateet <noreply@rateet.com>'
+
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
