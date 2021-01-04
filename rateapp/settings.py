@@ -201,19 +201,12 @@ USE_TZ = True
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_URL = '/media/'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = 'abtestcanalp@gmail.com'
-#EMAIL_HOST_PASSWORD = '5451051atabar'
-#EMAIL_PORT = 587
-#EMAIL_USE_TLS = True
-#EMAIL_USE_SSL = False
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'no.reply.rateet@gmail.com'
-EMAIL_HOST_PASSWORD = 'dlel voxi sejr kmgn'
+EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Rateet <noreply@rateet.com>'
@@ -240,7 +233,8 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 REST_AUTH_SERIALIZERS = {
         'USER_DETAILS_SERIALIZER': 'api.serializers.UserSerializer',
-        'LOGIN_SERIALIZER': 'api.serializers.UserLoginSerializer'
+        'LOGIN_SERIALIZER': 'api.serializers.UserLoginSerializer',
+        'PASSWORD_RESET_SERIALIZER': 'api.serializers.PasswordResetSerializer'
 }
 
 SIMPLE_JWT = {

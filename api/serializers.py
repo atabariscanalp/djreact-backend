@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate
 
 from dj_rest_auth.serializers import UserDetailsSerializer
 
+from rest_auth.serializers import PasswordResetSerializer
+
 import cv2
 
 from posts.models import Post, Rate
@@ -121,7 +123,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_profile_photo(self, obj):
         return obj.profile.profile_photo.url if obj.profile.profile_photo else ""
-    
+
 class UserEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -143,7 +145,7 @@ class ProfileListSerializer(serializers.ModelSerializer):
         return obj.profile_photo.url if obj.profile_photo else ""
     def get_username(self, obj):
         return obj.user.username
-        
+
 class ProfileDetailSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
     post_num = SerializerMethodField()
@@ -201,7 +203,7 @@ class CommentChildSerializer(serializers.ModelSerializer):
         ratedata = RateSerializer(rates, many=True, read_only=True).data
         dict = {v["user_id"]: v for v in ratedata}
         return dict
-    
+
     def get_user_id(self, obj):
         return obj.author.pk
 
@@ -333,7 +335,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         ratedata = RateSerializer(rates, many=True, read_only=True).data
         dict = {v["user_id"]: v for v in ratedata}
         return dict
-        
+
     def get_category(self, obj):
         return obj.category.title
 
@@ -451,3 +453,13 @@ class CommentRatedBySerializer(serializers.ModelSerializer):
 
     def get_profile_photo(self, obj):
         return (obj.rater.profile.profile_photo.url if obj.rater.profile.profile_photo else '')
+
+
+class PasswordResetSerializer(PasswordResetSerializer):
+    def get_email_options(self):
+        return {
+            'subject_template_name': 'api/password_reset_subject.txt',
+            'email_template_name': 'api/password_reset_message.txt',
+            'html_email_template_name': 'api/'
+                                    'password_reset_message.html',
+        }
