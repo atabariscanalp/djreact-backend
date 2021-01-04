@@ -19,6 +19,7 @@ from allauth.account import app_settings as allauth_settings
 from allauth.utils import email_address_exists, get_username_max_length
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
+from allauth.account.forms import ResetPasswordForm
 
 
 post_detail_url = HyperlinkedIdentityField(view_name='post-detail', lookup_field='slug')
@@ -454,10 +455,12 @@ class CommentRatedBySerializer(serializers.ModelSerializer):
 
 
 class PasswordResetSerializer(PasswordResetSerializer):
-    def get_email_options(self):
-        return {
-            'subject_template_name': 'api/password_reset_subject.txt',
-            'email_template_name': 'api/password_reset_message.txt',
-            'html_email_template_name': 'api/'
-                                    'password_reset_message.html',
-        }
+        password_reset_form_class = PasswordResetForm
+
+    # def get_email_options(self):
+    #     return {
+    #         'subject_template_name': 'registration/password_reset_subject.txt',
+    #         'email_template_name': 'registration/password_reset_message.txt',
+    #         'html_email_template_name': 'registration/'
+    #                                 'password_reset_message.html',
+    #     }
