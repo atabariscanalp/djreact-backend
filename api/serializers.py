@@ -455,7 +455,7 @@ class CommentRatedBySerializer(serializers.ModelSerializer):
 
 
 class PasswordResetSerializer(PasswordResetSerializer):
-        password_reset_form_class = PasswordResetForm
+        password_reset_form_class = ResetPasswordForm
 
     # def get_email_options(self):
     #     return {
