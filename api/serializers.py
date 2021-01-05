@@ -455,12 +455,11 @@ class CommentRatedBySerializer(serializers.ModelSerializer):
 
 
 class PasswordResetSerializer(PasswordResetSerializer):
-        password_reset_form_class = ResetPasswordForm
-
-    # def get_email_options(self):
-    #     return {
-    #         'subject_template_name': 'registration/password_reset_subject.txt',
-    #         'email_template_name': 'registration/password_reset_message.txt',
-    #         'html_email_template_name': 'registration/'
-    #                                 'password_reset_message.html',
-    #     }
+        #password_reset_form_class = ResetPasswordForm #Allauth's password form
+    def get_email_options(self):
+        return {
+            'subject_template_name': 'account/email/password_reset_subject.txt',
+            #'email_template_name': 'account/email/password_reset_message.txt',
+            'html_email_template_name': 'account/email/'
+                                    'password_reset_email.html',
+        }
