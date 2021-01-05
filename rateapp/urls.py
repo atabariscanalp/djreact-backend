@@ -38,7 +38,7 @@ urlpatterns = [
 
     # URLs that do not require a session or valid token
     path('auth/password/reset/', PasswordResetView.as_view(), name='rest_password_reset'),
-    path('auth/password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='rest_password_reset_confirm'),
+    path('auth/password_reset_confirm/', PasswordResetConfirmView.as_view(), name='rest_password_reset_confirm'),
     path('auth/login/', UserLoginAPIView.as_view(), name='rest_login'),
     path('auth/register/', UserRegisterAPIView.as_view(), name='rest_register'),
     
