@@ -420,6 +420,8 @@ class CheckEmailExistsAPIView(APIView):
         else:
             return Response(data={'message': 'not-valid'})
 
-class PasswordResetConfirmView(PasswordResetConfirmView):
-    post_reset_login = True
-    post_reset_login_backend = None
+#FOR AUTHENTICATE USER AFTER PASSWORD RESET
+#CAN BE USED LATER
+#class PasswordResetConfirmView(PasswordResetConfirmView):
+    #post_reset_login = True
+    #post_reset_login_backend = None
