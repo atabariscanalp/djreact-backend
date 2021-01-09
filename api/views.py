@@ -15,7 +15,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.utils.decorators import method_decorator
-
+from django.views.decorators.debug import sensitive_post_parameters
 
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.serializers import LoginSerializer
