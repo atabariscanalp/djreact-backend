@@ -12,13 +12,12 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.db import transaction
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as django_login
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.views import PasswordResetConfirmView
 
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.serializers import LoginSerializer
-from dj_rest_auth.views import LoginView
+from dj_rest_auth.views import LoginView, PasswordResetConfirmView as DJRESTPasswordResetConfirmView
 from dj_rest_auth.utils import jwt_encode
 from dj_rest_auth.app_settings import (JWTSerializer, TokenSerializer,
                                        create_token)
@@ -211,7 +210,7 @@ class PostRateAPIView(generics.CreateAPIView):
         data = { 'postId': post.id }
         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, post=post)
-        
+
 
 class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Rate.objects.all()
@@ -385,10 +384,10 @@ class UserEditAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserEditSerializer
     queryset = CustomUser.objects.all()
     permission_classes = [IsAuthenticated | IsAdminUser]
-    
+
     def get_object(self):
            return self.request.user
-      
+
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileDetailSerializer
     lookup_field = 'username'
@@ -420,3 +419,13 @@ class CheckEmailExistsAPIView(APIView):
             return Response(data={'message': 'valid'})
         else:
             return Response(data={'message': 'not-valid'})
+
+class DjangoPasswordResetConfirmAPIView(PasswordResetConfirmView):
+    post_reset_login = True
+    post_reset_login_backend = None
+
+class DJRESTPasswordResetConfirmAPIView(DJRESTPasswordResetConfirmView):
+
+    @sensitive_post_parameters_m
+    def dispatch(self, *args, **kwargs):
+        return super(DjangoPasswordResetConfirmAPIView, self).dispatch(*args, **kwargs)
