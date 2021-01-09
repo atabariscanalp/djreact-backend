@@ -14,6 +14,8 @@ from django.db import transaction
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.views import PasswordResetConfirmView
+from django.utils.decorators import method_decorator
+
 
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.serializers import LoginSerializer
@@ -424,6 +426,12 @@ class DjangoPasswordResetConfirmAPIView(PasswordResetConfirmView):
     post_reset_login = True
     post_reset_login_backend = None
 
+
+sensitive_post_parameters_m = method_decorator(
+    sensitive_post_parameters(
+        'password', 'old_password', 'new_password1', 'new_password2'
+    )
+)
 class DJRESTPasswordResetConfirmAPIView(DJRESTPasswordResetConfirmView):
 
     @sensitive_post_parameters_m
