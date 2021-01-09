@@ -24,7 +24,7 @@ from dj_rest_auth.views import (LoginView, LogoutView, PasswordChangeView,
                                 UserDetailsView)
 from dj_rest_auth.registration.views import (RegisterView, VerifyEmailView)
 
-from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView, DJRESTPasswordResetConfirmAPIView
+from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView
 
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
@@ -38,7 +38,7 @@ urlpatterns = [
 
     # URLs that do not require a session or valid token
     path('auth/password/reset/', PasswordResetView.as_view(), name='rest_password_reset'),
-    path('auth/password/reset/confirm/', DJRESTPasswordResetConfirmAPIView.as_view(), name='rest_password_reset_confirm'),
+    path('auth/password/reset/confirm/', PasswordResetConfirmView.as_view(), name='rest_password_reset_confirm'),
     path('auth/login/', UserLoginAPIView.as_view(), name='rest_login'),
     path('auth/register/', UserRegisterAPIView.as_view(), name='rest_register'),
 

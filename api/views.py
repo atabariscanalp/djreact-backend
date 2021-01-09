@@ -14,12 +14,10 @@ from django.db import transaction
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.views import PasswordResetConfirmView
-from django.utils.decorators import method_decorator
-from django.views.decorators.debug import sensitive_post_parameters
 
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.serializers import LoginSerializer
-from dj_rest_auth.views import LoginView, PasswordResetConfirmView as DJRESTPasswordResetConfirmView
+from dj_rest_auth.views import LoginView
 from dj_rest_auth.utils import jwt_encode
 from dj_rest_auth.app_settings import (JWTSerializer, TokenSerializer,
                                        create_token)
@@ -422,18 +420,6 @@ class CheckEmailExistsAPIView(APIView):
         else:
             return Response(data={'message': 'not-valid'})
 
-class DjangoPasswordResetConfirmAPIView(PasswordResetConfirmView):
+class PasswordResetConfirmView(PasswordResetConfirmView):
     post_reset_login = True
     post_reset_login_backend = None
-
-
-sensitive_post_parameters_m = method_decorator(
-    sensitive_post_parameters(
-        'password', 'old_password', 'new_password1', 'new_password2'
-    )
-)
-class DJRESTPasswordResetConfirmAPIView(DJRESTPasswordResetConfirmView):
-
-    @sensitive_post_parameters_m
-    def dispatch(self, *args, **kwargs):
-        return super(DjangoPasswordResetConfirmAPIView, self).dispatch(*args, **kwargs)
