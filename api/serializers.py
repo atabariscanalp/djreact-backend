@@ -271,7 +271,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
     author = SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ('id', 'author', 'content', 'created_at', 'replies', 'post')
+        fields = ('id', 'parent_id', 'author', 'content', 'created_at', 'replies', 'post')
     def get_replies(self, obj):
         if obj.is_parent:
             return CommentChildSerializer(obj.children(), many=True).data
