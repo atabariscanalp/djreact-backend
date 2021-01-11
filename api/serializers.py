@@ -217,7 +217,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id','content', 'author', 'reply_count', 'avg_rate', 'rate_count', 'rated_by', 'replies')
-        depth = 1
+        depth = 2 #changed from 1 to 2!
 
     def get_reply_count(self, obj):
         if obj.is_parent:
