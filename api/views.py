@@ -191,6 +191,7 @@ class PostDetailAPIView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
 
 
+#FIX THAT LATER!
 class PostDeleteAPIView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostListSerializer
@@ -342,6 +343,7 @@ class CommentRateAPIView(generics.CreateAPIView):
         send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, comment=comment)
 
+#FIX THAT LATER!
 class CommentDeleteAPIView(generics.DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
@@ -423,6 +425,14 @@ class CheckEmailExistsAPIView(APIView):
             return Response(data={'message': 'valid'})
         else:
             return Response(data={'message': 'not-valid'})
+
+class DeleteFCMDeviceAPIView(generics.RetrieveDestroyAPIView):
+    lookup_field = 'fcm_token'
+    # permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        obj = get_object_or_404(FCMDevice, registration_id=self.kwargs['fcm_token'])
+        return obj
 
 # class DeactivateFCMDeviceAPIView(generics.RetrieveUpdateAPIView):
 #     queryset = FCMDevice.objects.all()
