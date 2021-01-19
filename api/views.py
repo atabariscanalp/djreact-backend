@@ -48,7 +48,8 @@ from .serializers import (PostDetailSerializer,
                           UserEditSerializer,
                           ProfileDetailSerializer,
                           ProfileListSerializer,
-                          ProfilePhotoUploadSerializer)
+                          ProfilePhotoUploadSerializer,
+                          FCMDeviceSerializer)
 
 
 
@@ -428,6 +429,7 @@ class CheckEmailExistsAPIView(APIView):
 
 class DeleteFCMDeviceAPIView(generics.RetrieveDestroyAPIView):
     lookup_field = 'fcm_token'
+    serializer_class = FCMDeviceSerializer
     # permission_classes = [IsAuthenticated]
 
     def get_object(self):

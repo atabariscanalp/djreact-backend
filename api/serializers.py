@@ -11,6 +11,8 @@ from dj_rest_auth.serializers import UserDetailsSerializer, PasswordResetSeriali
 
 import cv2
 
+from fcm_django.models import FCMDevice
+
 from posts.models import Post, Rate
 from comments.models import Comment, CommentRate
 from users.models import CustomUser, Profile
@@ -477,3 +479,7 @@ class PasswordResetSerializer(PasswordResetSerializer):
             'html_email_template_name': 'account/email/'
                                     'password_reset_email.html',
         }
+
+class FCMDeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FCMDevice

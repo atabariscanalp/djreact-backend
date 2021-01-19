@@ -24,7 +24,7 @@ from dj_rest_auth.views import (LoginView, LogoutView, PasswordChangeView,
                                 UserDetailsView)
 from dj_rest_auth.registration.views import (RegisterView, VerifyEmailView)
 
-from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView
+from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView, DeleteFCMDeviceAPIView
 
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
@@ -49,7 +49,7 @@ urlpatterns = [
     path('auth/user/', UserDetailsView.as_view(), name='rest_user_details'),
     path('auth/password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
     path('add/device/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='add_fcm_device'),
-    path('delete/device/', FCMDeviceAuthorizedViewSet.as_view({'post': 'delete'}), name='delete_fcm_device')
+    path('delete/device/<int:fcm_token>/', DeleteFCMDeviceAPIView.as_view(), name='delete_fcm_device')
 ]
 
 #if settings.DEBUG:
