@@ -10,14 +10,14 @@ def send_notification(user_id, title, message, data):
    except:
       pass
 
-  def send_silent_notification(user_id, data):
+def send_silent_notification(user_id, data):
      try:
         user = CustomUser.objects.all().filter(pk=user_id).first()
         device = FCMDevice.objects.all().filter(user=user).first()
 
         result = device.send_message(data=data)
         return result
-     except:
+    except:
         pass
 
 
