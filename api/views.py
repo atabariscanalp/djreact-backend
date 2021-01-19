@@ -424,11 +424,11 @@ class CheckEmailExistsAPIView(APIView):
         else:
             return Response(data={'message': 'not-valid'})
 
-class DeactivateFCMDeviceAPIView(generics.RetrieveUpdateAPIView):
-    queryset = FCMDevice.objects.all()
-    serializer_class = FCMDeviceUpdateSerializer
-    lookup_field = ('token', 'userId')
-    lookup_url_kwarg = 'token/userId'
+# class DeactivateFCMDeviceAPIView(generics.RetrieveUpdateAPIView):
+#     queryset = FCMDevice.objects.all()
+#     serializer_class = FCMDeviceUpdateSerializer
+#     lookup_field = ('token', 'userId')
+#     lookup_url_kwarg = 'token/userId'
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER
