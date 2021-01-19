@@ -483,3 +483,4 @@ class PasswordResetSerializer(PasswordResetSerializer):
 class FCMDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FCMDevice
+        fields = '__all__'
