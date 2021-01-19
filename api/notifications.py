@@ -11,7 +11,7 @@ def send_notification(user_id, title, message, data):
       pass
 
 def send_silent_notification(user_id, data):
-     try:
+    try:
         user = CustomUser.objects.all().filter(pk=user_id).first()
         device = FCMDevice.objects.all().filter(user=user).first()
 
