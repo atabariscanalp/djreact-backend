@@ -25,7 +25,9 @@ from dj_rest_auth.app_settings import (JWTSerializer, TokenSerializer,
 from allauth.account.utils import complete_signup
 from allauth.account import app_settings as allauth_settings
 
-from .notifications import send_notification
+from fcm_django.models import FCMDevice
+
+from .notifications import send_notification, send_silent_notification
 from .permissions import IsOwnerOrReject
 from posts.models import Post, Rate, Category
 from users.models import CustomUser, Profile
@@ -207,7 +209,7 @@ class PostRateAPIView(generics.CreateAPIView):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
         title = post.author.username
         message = '{username} rated your post!'.format(username=self.request.user.username)
-        data = { 'postId': post.id }
+        data = { 'link': 'rateet://app/post-detail/' + post.id }
         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, post=post)
 
@@ -225,9 +227,10 @@ class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          obj = queryset.filter(post=post, rater=self.request.user).get()
          serializer = PostRateSerializer(obj)
          title = post.author.username
-         message = '{username} rated your post!'.format(username=self.request.user.username) #its ??
-         data = { 'postId': post.id }
-         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
+         # message = '{username} rated your post!'.format(username=self.request.user.username)
+         # send_notification(user_id=post.author.pk, title=title, message=message, data=data)
+         data = { 'link': 'rateet://app/post-detail/' + post.id }
+         send_silent_notification(user_id=post.author.pk, data=data)
          return obj
 
 class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -243,9 +246,10 @@ class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          obj = queryset.filter(comment=comment, rater=self.request.user).get()
          serializer = CommentRateSerializer(obj)
          title = comment.author.username
-         message = '{username} rated your comment!'.format(username=self.request.user.username)
-         data = { 'commentId': comment.id }
-         send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
+         # message = '{username} rated your comment!'.format(username=self.request.user.username)
+         # send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
+         data = { 'link': 'rateet://app/post-detail/' +  comment.post.id + '/comment/' + comment.id}
+         send_silent_notification(data=data)
          return obj
 
 class CommentAPIView(generics.ListAPIView):
@@ -291,7 +295,7 @@ class CommentCreateAPIView(generics.CreateAPIView):
         serializer = CommentSerializer(obj)
         title = post.author.username
         message = '{username} commented to your post!'.format(username=user.username)
-        data = { 'postId': post.id }
+        data = { 'link': 'rateet://app/post-detail/' + post.id + '/comment/' + obj.id}
         send_notification(user_id=post.author.id, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -318,7 +322,7 @@ class CommentReplyCreateAPIView(generics.CreateAPIView):
         serializer = CommentChildSerializer(obj)
         title = parent.author.username
         message = '{username} replied to your comment!'.format(username=user.username)
-        data = { 'parentId': parent.id }
+        data = { 'link': 'rateet://app/post-detail/' + parent.post.id + '/comment/' + parent.id + '/reply/' + obj.id}
         send_notification(user_id=parent.author.pk, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -334,7 +338,7 @@ class CommentRateAPIView(generics.CreateAPIView):
         comment = get_object_or_404(Comment, id=self.kwargs.get('comment_id'))
         title = comment.author.username
         message = '{username} rated your comment!'.format(username=self.request.user.username)
-        data = { 'commentId': comment.id }
+        data = { 'link': 'rateet://app/post-detail/' + comment.post.id + '/comment/' + comment.id}
         send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, comment=comment)
 
@@ -419,6 +423,12 @@ class CheckEmailExistsAPIView(APIView):
             return Response(data={'message': 'valid'})
         else:
             return Response(data={'message': 'not-valid'})
+
+class DeactivateFCMDeviceAPIView(generics.RetrieveUpdateAPIView):
+    queryset = FCMDevice.objects.all()
+    serializer_class = FCMDeviceUpdateSerializer
+    lookup_field = ('token', 'userId')
+    lookup_url_kwarg = 'token/userId'
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER

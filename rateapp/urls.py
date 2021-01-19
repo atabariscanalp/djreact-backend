@@ -48,7 +48,8 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='rest_logout'),
     path('auth/user/', UserDetailsView.as_view(), name='rest_user_details'),
     path('auth/password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
-    path('add/device/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='add_fcm_device')
+    path('add/device/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='add_fcm_device'),
+    path('delete/device/', FCMDeviceAuthorizedViewSet.as_view({'post': 'delete'}), name='delete_fcm_device')
 ]
 
 #if settings.DEBUG:
