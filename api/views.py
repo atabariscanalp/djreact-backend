@@ -270,14 +270,15 @@ class CommentAPIView(generics.ListAPIView):
             ).distinct()
         return queryset_list
 
-# class CommentGetForPostAPIView(generics.ListAPIView):
-#     lookup_field = ('post')
-#     lookup_url_kwargs = ('post_id')
-#
-#     def get_queryset(self, *args, **kwargs):
-#         post_id = self.kwargs.get('post_id')
-#         post = get_object_or_404(Post, id=post_id)
-#         return post.comments
+class GetPostCommentsAPIView(generics.ListAPIView):
+    lookup_field = ('post')
+    lookup_url_kwargs = ('post_id')
+    serializer_class = CommentSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        post_id = self.kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        return post.comments
 
 class CommentCreateAPIView(generics.CreateAPIView):
     queryset = Comment.objects.all()
