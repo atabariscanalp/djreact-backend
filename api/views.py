@@ -266,7 +266,7 @@ class CommentAPIView(generics.ListAPIView):
             queryset_list = queryset_list.filter(
                 Q(content__icontains = query) |
                 Q(author__username__icontains = query) |
-                Q(post__id__icontains = query_post_id)
+                Q(post__id__iexact = query_post_id)
             ).distinct()
         return queryset_list
 
