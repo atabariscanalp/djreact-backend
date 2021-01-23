@@ -45,6 +45,7 @@ urlpatterns = [
     path('comments/delete/<int:pk>', CommentDeleteAPIView.as_view(), name='comment-delete'),
     path('comments/create/<int:post_id>', CommentCreateAPIView.as_view(), name='comment-create'),
     path('comments/<int:pk>/reply', CommentReplyCreateAPIView.as_view(), name='comment-reply-create'),
+    # path('comments/p/<int:post_id>', CommentGetForPostAPIView.as_view(), name='get-comments-for-post'),
     #USER
     path('user/', GetUserAPIView.as_view(), name='user-view'),
     path('users/', UserListAPIView.as_view(), name='user-list'), #using profile object!!
