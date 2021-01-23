@@ -211,7 +211,7 @@ class PostRateAPIView(generics.CreateAPIView):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
         title = post.author.username
         message = '{username} rated your post!'.format(username=self.request.user.username)
-        data = { 'link': 'rateet://app/post-detail/' + post.id }
+        data = { 'link': 'rateet://app/post-detail/' + str(post.id) }
         send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, post=post)
 
@@ -231,7 +231,7 @@ class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          title = post.author.username
          # message = '{username} rated your post!'.format(username=self.request.user.username)
          # send_notification(user_id=post.author.pk, title=title, message=message, data=data)
-         data = { 'link': 'rateet://app/post-detail/' + post.id }
+         data = { 'link': 'rateet://app/post-detail/' + str(post.id) }
          send_silent_notification(user_id=post.author.pk, data=data)
          return obj
 
@@ -250,7 +250,7 @@ class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          title = comment.author.username
          # message = '{username} rated your comment!'.format(username=self.request.user.username)
          # send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
-         data = { 'link': 'rateet://app/post-detail/' +  comment.post.id + '/comment/' + comment.id}
+         data = { 'link': 'rateet://app/post-detail/' +  str(comment.post.id) + '/comment/' + str(comment.id))}
          send_silent_notification(data=data)
          return obj
 
@@ -297,7 +297,7 @@ class CommentCreateAPIView(generics.CreateAPIView):
         serializer = CommentSerializer(obj)
         title = post.author.username
         message = '{username} commented to your post!'.format(username=user.username)
-        data = { 'link': 'rateet://app/post-detail/' + post.id + '/comment/' + obj.id}
+        data = { 'link': 'rateet://app/post-detail/' + str(post.id) + '/comment/' + str(obj.id)}
         send_notification(user_id=post.author.id, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -324,7 +324,7 @@ class CommentReplyCreateAPIView(generics.CreateAPIView):
         serializer = CommentChildSerializer(obj)
         title = parent.author.username
         message = '{username} replied to your comment!'.format(username=user.username)
-        data = { 'link': 'rateet://app/post-detail/' + parent.post.id + '/comment/' + parent.id + '/reply/' + obj.id}
+        data = { 'link': 'rateet://app/post-detail/' + str(parent.post.id) + '/comment/' + str(parent.id) + '/reply/' + str(obj.id)}
         send_notification(user_id=parent.author.pk, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -340,7 +340,7 @@ class CommentRateAPIView(generics.CreateAPIView):
         comment = get_object_or_404(Comment, id=self.kwargs.get('comment_id'))
         title = comment.author.username
         message = '{username} rated your comment!'.format(username=self.request.user.username)
-        data = { 'link': 'rateet://app/post-detail/' + comment.post.id + '/comment/' + comment.id}
+        data = { 'link': 'rateet://app/post-detail/' + str(comment.post.id) + '/comment/' + str(comment.id)}
         send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
         serializer.save(rater=self.request.user, comment=comment)
 
