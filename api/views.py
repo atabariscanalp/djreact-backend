@@ -261,11 +261,12 @@ class CommentAPIView(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         queryset_list = Comment.objects.all()
         query = self.request.GET.get("q")
+        query_post_id = self.request.GET.get("post_id")
         if query:
             queryset_list = queryset_list.filter(
                 Q(content__icontains = query) |
                 Q(author__username__icontains = query) |
-                Q(post__id__icontains = query)
+                Q(post__id__icontains = query_post_id)
             ).distinct()
         return queryset_list
 
