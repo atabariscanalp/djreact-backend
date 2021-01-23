@@ -250,7 +250,7 @@ class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          title = comment.author.username
          # message = '{username} rated your comment!'.format(username=self.request.user.username)
          # send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
-         data = { 'link': 'rateet://app/post-detail/' +  str(comment.post.id) + '/comment/' + str(comment.id))}
+         data = { 'link': 'rateet://app/post-detail/' +  str(comment.post.id) + '/comment/' + str(comment.id)}
          send_silent_notification(data=data)
          return obj
 
