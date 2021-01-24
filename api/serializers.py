@@ -286,7 +286,9 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 
     def get_replies(self, obj):
         if obj.replies.count() > 0:
-            return CommentChildSerializer(obj.children(), many=True).data
+            data = CommentChildSerializer(obj.children(), many=True).data
+            dict = {v["id"]: v for v in data}
+            return dict
         return None
 
     def get_author(self, obj):
