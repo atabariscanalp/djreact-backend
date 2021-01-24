@@ -261,12 +261,10 @@ class CommentAPIView(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         queryset_list = Comment.objects.all()
         query = self.request.GET.get("q")
-        query_post_id = self.request.GET.get("post_id")
         if query:
             queryset_list = queryset_list.filter(
                 Q(content__icontains = query) |
-                Q(author__username__icontains = query) |
-                Q(post__id__iexact = query_post_id)
+                Q(author__username__icontains = query)
             ).distinct()
         return queryset_list
 
@@ -278,7 +276,7 @@ class GetPostCommentsAPIView(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         post_id = self.kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
-        return post.comments
+        return post.comments.filter(parent=None)
 
 class CommentCreateAPIView(generics.CreateAPIView):
     queryset = Comment.objects.all()
