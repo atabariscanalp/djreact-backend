@@ -215,7 +215,7 @@ class CommentChildSerializer(serializers.ModelSerializer):
         return obj.author.pk
 
     def get_replies(self, obj):
-        if obj.is_parent:
+        if len(obj.replies) > 0:
             data = CommentChildSerializer(obj.children(), many=True).data
             dict = {v["author"]["pk"]: v for v in data}
             return dict
