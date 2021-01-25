@@ -212,8 +212,10 @@ class PostRateAPIView(generics.CreateAPIView):
         title = post.author.username
         message = '{username} rated your post!'.format(username=self.request.user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(post.id) }
-        send_notification(user_id=post.author.pk, title=title, message=message, data=data)
-        serializer.save(rater=self.request.user, post=post)
+        user = self.request.user
+        if post.author.pk != user.pk
+            send_notification(user_id=post.author.pk, title=title, message=message, data=data)
+        serializer.save(rater=user, post=post)
 
 
 class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -232,7 +234,8 @@ class PostRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          # message = '{username} rated your post!'.format(username=self.request.user.username)
          # send_notification(user_id=post.author.pk, title=title, message=message, data=data)
          data = { 'link': 'rateet://app/post-detail/' + str(post.id) }
-         send_silent_notification(user_id=post.author.pk, data=data)
+         if post.author.pk != self.request.user.pk
+            send_silent_notification(user_id=post.author.pk, data=data)
          return obj
 
 class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -251,7 +254,8 @@ class CommentRateUpdateAPIView(generics.RetrieveUpdateAPIView):
          # message = '{username} rated your comment!'.format(username=self.request.user.username)
          # send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
          data = { 'link': 'rateet://app/post-detail/' +  str(comment.post.id) + '/comment/' + str(comment.id)}
-         send_silent_notification(data=data)
+         if comment.author.pk != self.request.user.pk
+            send_silent_notification(data=data)
          return obj
 
 class CommentAPIView(generics.ListAPIView):
@@ -308,7 +312,8 @@ class CommentCreateAPIView(generics.CreateAPIView):
         title = post.author.username
         message = '{username} commented to your post!'.format(username=user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(post.id) + '/comment/' + str(obj.id)}
-        send_notification(user_id=post.author.id, title=title, message=message, data=data)
+        if post.author.pk != user.pk
+            send_notification(user_id=post.author.pk, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CommentReplyCreateAPIView(generics.CreateAPIView):
@@ -335,7 +340,8 @@ class CommentReplyCreateAPIView(generics.CreateAPIView):
         title = parent.author.username
         message = '{username} replied to your comment!'.format(username=user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(parent.post.id) + '/comment/' + str(parent.id) + '/reply/' + str(obj.id)}
-        send_notification(user_id=parent.author.pk, title=title, message=message, data=data)
+        if user.pk != parent.author.pk
+            send_notification(user_id=parent.author.pk, title=title, message=message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -351,8 +357,10 @@ class CommentRateAPIView(generics.CreateAPIView):
         title = comment.author.username
         message = '{username} rated your comment!'.format(username=self.request.user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(comment.post.id) + '/comment/' + str(comment.id)}
-        send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
-        serializer.save(rater=self.request.user, comment=comment)
+        user = self.request.user
+        if comment.author.pk != user.pk
+            send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
+        serializer.save(rater=user, comment=comment)
 
 #FIX THAT LATER!
 class CommentDeleteAPIView(generics.DestroyAPIView):
