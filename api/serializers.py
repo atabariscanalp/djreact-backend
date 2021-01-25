@@ -191,10 +191,10 @@ class CommentChildSerializer(serializers.ModelSerializer):
     rated_by = SerializerMethodField()
     rate_count = serializers.ReadOnlyField()
     user_id = serializers.ReadOnlyField()
-    replies = SerializerMethodField()
+    #replies = SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ('author', 'user_id', 'content', 'id','parent_id', 'avg_rate', 'rate_count', 'rated_by', 'replies')
+        fields = ('author', 'user_id', 'content', 'id','parent_id', 'avg_rate', 'rate_count', 'rated_by')
 
     def get_author(self, obj):
         serializer = UserSerializer(obj.author, read_only=True)
@@ -214,12 +214,12 @@ class CommentChildSerializer(serializers.ModelSerializer):
     def get_user_id(self, obj):
         return obj.author.pk
 
-    def get_replies(self, obj):
-        if obj.replies.count() > 0:
-            data = CommentChildSerializer(obj.children(), many=True).data
-            dict = {v["id"]: v for v in data}
-            return dict
-        return None
+    # def get_replies(self, obj):
+    #     if obj.replies.count() > 0:
+    #         data = CommentChildSerializer(obj.children(), many=True).data
+    #         dict = {v["id"]: v for v in data}
+    #         return dict
+    #     return None
 
 class CommentSerializer(serializers.ModelSerializer):
     reply_count = SerializerMethodField()
@@ -283,6 +283,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'author', 'content', 'created_at', 'replies', 'post')
+        depth = 1
 
     def get_replies(self, obj):
         if obj.replies.count() > 0:
