@@ -43,6 +43,7 @@ class Profile(models.Model):
     user = models.OneToOneField(CustomUser, related_name='profile', on_delete=models.CASCADE)
     location = models.CharField(max_length=140)
     profile_photo = models.ImageField(upload_to=upload_path, blank=True, null=True)
+    language = models.CharField(max_length=10, default='en')
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'username':self.user.username})
