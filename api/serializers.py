@@ -136,6 +136,11 @@ class ProfilePhotoUploadSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('profile_photo',)
 
+class ProfileLanguageUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('language',)
+
 class ProfileListSerializer(serializers.ModelSerializer):
     profile_photo = SerializerMethodField()
     username = SerializerMethodField()

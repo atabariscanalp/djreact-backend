@@ -49,6 +49,7 @@ from .serializers import (PostDetailSerializer,
                           ProfileDetailSerializer,
                           ProfileListSerializer,
                           ProfilePhotoUploadSerializer,
+                          ProfileLanguageUpdateSerializer,
                           FCMDeviceSerializer)
 
 
@@ -210,11 +211,15 @@ class PostRateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
         title = post.author.username
-        message = '{username} rated your post!'.format(username=self.request.user.username)
+        en_message = '{username} rated your post!'.format(username=self.request.user.username)
+        tr_message = '{username} gönderinizi puanladı!'.format(username=self.request.user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(post.id) }
         user = self.request.user
         if post.author.pk != user.pk:
-            send_notification(user_id=post.author.pk, title=title, message=message, data=data)
+            if post.author.profile.language == 'en':
+                send_notification(user_id=post.author.pk, title=title, message=en_message, data=data)
+            else:
+                send_notification(user_id=post.author.pk, title=title, message=tr_message, data=data)
         serializer.save(rater=user, post=post)
 
 
@@ -310,10 +315,14 @@ class CommentCreateAPIView(generics.CreateAPIView):
         obj.save()
         serializer = CommentSerializer(obj)
         title = post.author.username
-        message = '{username} commented to your post!'.format(username=user.username)
+        en_message = '{username} commented to your post!'.format(username=user.username)
+        tr_message = '{username} gönderinize yorum yaptı!'.format(username=user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(post.id) + '/comment/' + str(obj.id)}
         if post.author.pk != user.pk:
-            send_notification(user_id=post.author.pk, title=title, message=message, data=data)
+            if post.author.profile.language == 'en':
+                send_notification(user_id=post.author.pk, title=title, message=en_message, data=data)
+            else:
+                send_notification(user_id=post.author.pk, title=title, message=tr_message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CommentReplyCreateAPIView(generics.CreateAPIView):
@@ -338,10 +347,14 @@ class CommentReplyCreateAPIView(generics.CreateAPIView):
         obj = Comment.objects.create(author=user, post=parent.post, content=content, parent=parent)
         serializer = CommentChildSerializer(obj)
         title = parent.author.username
-        message = '{username} replied to your comment!'.format(username=user.username)
+        en_message = '{username} replied to your comment!'.format(username=user.username)
+        tr_message = '{username} yorumunuzu cevapladı!'.format(username=user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(parent.post.id) + '/comment/' + str(parent.id) + '/reply/' + str(obj.id)}
         if user.pk != parent.author.pk:
-            send_notification(user_id=parent.author.pk, title=title, message=message, data=data)
+            if parent.author.profile.language == 'en':
+                send_notification(user_id=parent.author.pk, title=title, message=en_message, data=data)
+            else:
+                send_notification(user_id=parent.author.pk, title=title, message=tr_message, data=data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -355,11 +368,15 @@ class CommentRateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         comment = get_object_or_404(Comment, id=self.kwargs.get('comment_id'))
         title = comment.author.username
-        message = '{username} rated your comment!'.format(username=self.request.user.username)
+        en_message = '{username} rated your comment!'.format(username=self.request.user.username)
+        tr_message = '{username} yorumunuzu puanladı!'.format(username=self.request.user.username)
         data = { 'link': 'rateet://app/post-detail/' + str(comment.post.id) + '/comment/' + str(comment.id)}
         user = self.request.user
         if comment.author.pk != user.pk:
-            send_notification(user_id=comment.author.pk, title=title, message=message, data=data)
+            if comment.author.profile.language == 'en':
+                send_notification(user_id=comment.author.pk, title=title, message=en_message, data=data)
+            else:
+                send_notification(user_id=comment.author.pk, title=title, message=tr_message, data=data)
         serializer.save(rater=user, comment=comment)
 
 #FIX THAT LATER!
@@ -435,6 +452,14 @@ class ProfilePhotoUploadAPIView(generics.RetrieveUpdateAPIView):
         obj = get_object_or_404(Profile, user = self.request.user.id)
         return obj
 
+class ProfileLanguageUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileLanguageUpdateSerializer
+
+    def get_object(self):
+        obj = get_object_or_404(Profile, user = self.request.user.id)
+        return obj
+
 class CheckEmailExistsAPIView(APIView):
     def get(self, request, *args, **kwargs):
         email = self.kwargs.get("email")
@@ -454,11 +479,7 @@ class DeleteFCMDeviceAPIView(generics.RetrieveDestroyAPIView):
         obj = get_object_or_404(FCMDevice, registration_id=self.kwargs['fcm_token'])
         return obj
 
-# class DeactivateFCMDeviceAPIView(generics.RetrieveUpdateAPIView):
-#     queryset = FCMDevice.objects.all()
-#     serializer_class = FCMDeviceUpdateSerializer
-#     lookup_field = ('token', 'userId')
-#     lookup_url_kwarg = 'token/userId'
+
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER
