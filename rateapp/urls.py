@@ -46,7 +46,7 @@ urlpatterns = [
     # URLs that require a user to be logged in with a valid session / token.
     path('auth/register/verify-email/', VerifyEmailView.as_view(), name='rest_verify_email'),
     path('auth/logout/', LogoutView.as_view(), name='rest_logout'),
-    path('auth/user/', UserDetailsView.as_view(), name='rest_user_details'),
+    path('auth/user/', GetUserAPIView.as_view(), name='rest_user_details'),
     path('auth/password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
     path('add/device/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='add_fcm_device'),
     path('delete/device/<str:fcm_token>/', DeleteFCMDeviceAPIView.as_view(), name='delete_fcm_device')

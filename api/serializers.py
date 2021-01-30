@@ -117,13 +117,16 @@ class UserLoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile_photo = SerializerMethodField()
+    language = SerializerMethodField()
     class Meta:
         model = CustomUser
-        fields = ('pk', 'username', 'email', 'first_name', 'last_name', 'profile_photo')
-        read_only_fields = ('email',)
+        fields = ('pk', 'username', 'email', 'first_name', 'last_name', 'profile_photo', 'language')
+        read_only_fields = ('email', 'pk')
 
     def get_profile_photo(self, obj):
         return obj.profile.profile_photo.url if obj.profile.profile_photo else ""
+    def get_language(self, obj):
+        return obj.profile.language
 
 class UserEditSerializer(serializers.ModelSerializer):
     class Meta:

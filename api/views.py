@@ -406,7 +406,6 @@ class UserListAPIView(generics.ListAPIView):
 class GetUserAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
-    queryset = CustomUser.objects.all()
 
     def get_object(self):
         return self.request.user
