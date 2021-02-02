@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -269,7 +269,9 @@ REST_USE_JWT = True
 #
 # CSRF_COOKIE_HTTPONLY = False
 #
-# CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
 #
 # SESSION_COOKIE_NAME = "session-cookie"
 
@@ -301,3 +303,8 @@ FCM_DJANGO_SETTINGS = {
          # default: False
         "DELETE_INACTIVE_DEVICES": False,
 }
+
+#production
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_SSL_REDIRECT = False # check this later!
+SECURE_HSTS_SECONDS = 0 #check this later!
