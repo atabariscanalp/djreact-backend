@@ -115,11 +115,11 @@ WSGI_APPLICATION = 'rateapp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djreact',
-        'USER': 'djreactadmin',
+        'NAME': 'rateet_db',
+        'USER': 'rateetadmin',
         'PASSWORD': '5451051atabar',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'rateet-db-1.cz39flew78tj.us-east-2.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
