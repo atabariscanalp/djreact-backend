@@ -464,7 +464,7 @@ class CheckEmailExistsAPIView(APIView):
         email = self.kwargs.get("email")
         try:
             user = CustomUser.objects.get(email=email)
-        except CustomUser.DoesNotExist:
+        except user.DoesNotExist:
             return Response(data={'message': 'valid'})
         else:
             return Response(data={'message': 'not-valid'})
