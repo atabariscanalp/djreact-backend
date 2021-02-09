@@ -478,7 +478,8 @@ class DeleteFCMDeviceAPIView(generics.RetrieveDestroyAPIView):
         obj = get_object_or_404(FCMDevice, registration_id=self.kwargs['fcm_token'])
         return obj
 
-
+def PrivacyPolicyView(request):
+    return render(request, 'templates/termsANDpolicy/privacy_policy.html')
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER
