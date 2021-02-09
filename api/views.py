@@ -14,6 +14,7 @@ from django.db import transaction
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.views import PasswordResetConfirmView
+from django.views.generic.base import TemplateView
 
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.serializers import LoginSerializer
@@ -478,8 +479,8 @@ class DeleteFCMDeviceAPIView(generics.RetrieveDestroyAPIView):
         obj = get_object_or_404(FCMDevice, registration_id=self.kwargs['fcm_token'])
         return obj
 
-def PrivacyPolicyView(request):
-    return render(request, 'templates/termsANDpolicy/privacy_policy.html')
+class PrivacyPolicyView(TemplateView):
+    template_name='termsANDpolicy/privacy_policy.html'
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER
