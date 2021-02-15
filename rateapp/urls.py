@@ -24,7 +24,7 @@ from dj_rest_auth.views import (LoginView, LogoutView, PasswordChangeView,
                                 UserDetailsView)
 from dj_rest_auth.registration.views import (RegisterView, VerifyEmailView)
 
-from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView, DeleteFCMDeviceAPIView, PrivacyPolicyView
+from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView, DeleteFCMDeviceAPIView, PrivacyPolicyView, TermsAndConditionsView, EULAView
 
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
@@ -42,6 +42,9 @@ urlpatterns = [
     path('auth/login/', UserLoginAPIView.as_view(), name='rest_login'),
     path('auth/register/', UserRegisterAPIView.as_view(), name='rest_register'),
     path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy-policy'),
+    path('terms-and-conditions/', TermsAndConditionsView.as_view(), name='terms-and-conditions'),
+    path('end-user-license-agreement/', EULAView.as_view(), name='eula'),
+
 
     path('', include('django.contrib.auth.urls')),
     # URLs that require a user to be logged in with a valid session / token.

@@ -482,6 +482,12 @@ class DeleteFCMDeviceAPIView(generics.RetrieveDestroyAPIView):
 class PrivacyPolicyView(TemplateView):
     template_name='termsANDpolicy/privacy_policy.html'
 
+class TermsAndConditionsView(TemplateView):
+    template_name='termsANDpolicy/termsconditions.html'
+
+class EULAView(TemplateView):
+    template_name='termsANDpolicy/eula.html'
+
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER
 #class PasswordResetConfirmView(PasswordResetConfirmView):
