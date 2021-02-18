@@ -13,7 +13,7 @@ import cv2
 
 from fcm_django.models import FCMDevice
 
-from posts.models import Post, Rate
+from posts.models import Post, Rate, Report
 from comments.models import Comment, CommentRate
 from users.models import CustomUser, Profile
 
@@ -485,7 +485,7 @@ class CommentRatedBySerializer(serializers.ModelSerializer):
 
 
 class PasswordResetSerializer(PasswordResetSerializer):
-        #password_reset_form_class = ResetPasswordForm #Allauth's password form
+    #password_reset_form_class = ResetPasswordForm #Allauth's password form
     def get_email_options(self):
         return {
             #'subject_template_name': 'account/email/password_reset_subject.txt',
@@ -498,3 +498,19 @@ class FCMDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FCMDevice
         fields = '__all__'
+
+
+class ReportCreateSerializer(serializers.ModelSerializer):
+    post = SerializerMethodField()
+    reporter = SerializerMethodField()
+    class Meta:
+        model = Report
+        fields = ('id', 'post', 'reporter', 'report', 'date_created')
+
+    def get_post(self, obj):
+        return obj.post.slug
+    
+    def get_reporter(self, obj):
+        return obj.reporter.username
+
+

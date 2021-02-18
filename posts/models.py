@@ -111,3 +111,18 @@ def pre_save_post_receiver(sender, instance,*args,**kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.title)
 pre_save.connect(pre_save_post_receiver, sender=Post)
+
+
+
+class Report(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='reports', null=False)
+    reporter = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='reporter', null=False)
+    report = models.CharField(max_length=100, verbose_name='Report Reason')
+    date_created = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Report"
+        verbose_name_plural = "Reports"
+    
+    def __str__(self):
+        return 'user: {} - reported: {} - post: {}'.format(self.reporter.username, self.report, self.post.slug)

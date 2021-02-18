@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from .models import Post
-from .models import Category
-from .models import Rate
+from .models import Post, Category, Rate, Report
+
 
 class ClientAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
@@ -10,3 +9,4 @@ class ClientAdmin(admin.ModelAdmin):
 admin.site.register(Post, ClientAdmin)
 admin.site.register(Category)
 admin.site.register(Rate)
+admin.site.register(Report)

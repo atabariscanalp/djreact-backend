@@ -23,7 +23,8 @@ from .views import (PostListAPIView,
                     GetUserAPIView,
                     UserEditAPIView,
                     CheckEmailExistsAPIView,
-                    GetPostCommentsAPIView)
+                    GetPostCommentsAPIView,
+                    ReportCreateAPIView)
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -39,6 +40,7 @@ urlpatterns = [
     path('p/detail/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
     path('p/delete/<slug:slug>', PostDeleteAPIView.as_view(), name='post-delete'),
     path('p/rate/update/<int:post_id>', PostRateUpdateAPIView.as_view(), name='post-rate-update'),
+    path('p/report/<int:post_id>', ReportCreateAPIView.as_view(), name='post-report'),
     #COMMENT
     path('comments/', CommentAPIView.as_view(), name='comments'),
     path('comments/<int:pk>', CommentDetailAPIView.as_view(), name='comment-detail'),

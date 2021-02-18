@@ -30,7 +30,7 @@ from fcm_django.models import FCMDevice
 
 from .notifications import send_notification, send_silent_notification
 from .permissions import IsOwnerOrReject
-from posts.models import Post, Rate, Category
+from posts.models import Post, Rate, Category, Report
 from users.models import CustomUser, Profile
 from comments.models import Comment, CommentRate
 from .serializers import (PostDetailSerializer,
@@ -51,7 +51,8 @@ from .serializers import (PostDetailSerializer,
                           ProfileListSerializer,
                           ProfilePhotoUploadSerializer,
                           ProfileLanguageUpdateSerializer,
-                          FCMDeviceSerializer)
+                          FCMDeviceSerializer,
+                          ReportCreateSerializer)
 
 
 
@@ -486,7 +487,20 @@ class TermsAndConditionsView(TemplateView):
     template_name='termsANDpolicy/termsconditions.html'
 
 class EULAView(TemplateView):
-    template_name='termsANDpolicy/eula.html'
+    template_name='termsANDpolicy/eula.html'    
+
+class ReportCreateAPIView(generics.CreateAPIView):
+    queryset = Report.objects.all()
+    serializer_class = ReportCreateSerializer
+    permission_classes = [IsAuthenticated | IsAdminUser]
+    lookup_field = ('post')
+    lookup_url_kwargs = ('post_id')
+
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
+        user = self.request.user
+        serializer.save(post=post, reporter=user)
+
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER
