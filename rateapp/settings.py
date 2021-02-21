@@ -206,6 +206,9 @@ USE_TZ = True
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_URL = '/media/'
 
+ADMINS = [('Baris', 'no.reply.rateet@gmail.com'),]
+MANAGERS = ADMINS
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
