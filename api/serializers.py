@@ -518,8 +518,15 @@ class ReportCreateSerializer(serializers.ModelSerializer):
 
 
 class BlockedUsersSerializer(serializers.ModelSerializer):
+    blocked_user = SerializerMethodField()
     class Meta:
         model = BlockedUsers
-        fields = '__all__'
+        fields = ('blocker', 'blocked_user')
 
-    
+    def get_blocked_user(self, obj):
+        queryset = BlockedUsers.objects.all().filter(blocker=self.request.user)
+        blocks = []
+        for q in queryset:
+            blocks.append(q.blocked_user)
+        data = UserEditSerializer(blocks, many=True, read_only=True).data 
+        return data
