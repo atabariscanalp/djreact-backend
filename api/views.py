@@ -31,7 +31,7 @@ from fcm_django.models import FCMDevice
 from .notifications import send_notification, send_silent_notification
 from .permissions import IsOwnerOrReject
 from posts.models import Post, Rate, Category, Report
-from users.models import CustomUser, Profile
+from users.models import CustomUser, Profile, BlockedUsers
 from comments.models import Comment, CommentRate
 from .serializers import (PostDetailSerializer,
                           PostCreateSerializer,
@@ -52,7 +52,8 @@ from .serializers import (PostDetailSerializer,
                           ProfilePhotoUploadSerializer,
                           ProfileLanguageUpdateSerializer,
                           FCMDeviceSerializer,
-                          ReportCreateSerializer)
+                          ReportCreateSerializer,
+                          BlockedUsersSerializer)
 
 
 
@@ -139,6 +140,11 @@ class PostListAPIView(generics.ListAPIView):
         if query_title:
             queryset_list = queryset_list.filter(
                 Q(title__istartswith = query_title)
+            ).distinct()
+        query_users = self.request.GET.get("exclude_users")
+        if query_users:
+            queryset_list = queryset_list.filter(
+                ~Q(author__id__icontains = query_users) #exclude users
             ).distinct()
         # dict = {v["id"]: v for v in queryset_list}
         return queryset_list
@@ -501,6 +507,27 @@ class ReportCreateAPIView(generics.CreateAPIView):
         user = self.request.user
         serializer.save(post=post, reporter=user)
 
+
+class GetBlockedUsersAPIView(generics.RetrieveAPIView):
+    queryset = BlockedUsers.objects.all()
+    serializer_class = BlockedUsersSerializer
+    permission_classes = [IsAuthenticated | IsAdminUser]
+
+    def get_object(self):
+        obj = get_object_or_404(BlockedUsers, blocker=self.request.user)
+        return obj
+
+class AddBlockedUserAPIView(generics.CreateAPIView):
+    queryset = BlockedUsers.objects.all()
+    serializer_class = BlockedUsersSerializer
+    permission_classes = [IsAuthenticated | IsAdminUser]
+    lookup_field = ('blocked_user')
+    lookup_url_kwargs = ('user_id')
+
+    def perform_create(self, serializer):
+        blocked_user = get_object_or_404(CustomUser, id=self.kwargs.get('user_id'))
+        user = self.request.user
+        serializer.save(blocker=user, blocked_user=blocked_user)
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER

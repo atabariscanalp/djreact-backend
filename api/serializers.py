@@ -15,7 +15,7 @@ from fcm_django.models import FCMDevice
 
 from posts.models import Post, Rate, Report
 from comments.models import Comment, CommentRate
-from users.models import CustomUser, Profile
+from users.models import CustomUser, Profile, BlockedUsers
 
 from allauth.account import app_settings as allauth_settings
 from allauth.utils import email_address_exists, get_username_max_length
@@ -118,6 +118,7 @@ class UserLoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     profile_photo = SerializerMethodField()
     language = SerializerMethodField()
+    #blocked_users = SerializerMethodField()
     class Meta:
         model = CustomUser
         fields = ('pk', 'username', 'email', 'first_name', 'last_name', 'profile_photo', 'language')
@@ -127,6 +128,8 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.profile.profile_photo.url if obj.profile.profile_photo else ""
     def get_language(self, obj):
         return obj.profile.language
+    #def get_blocked_users(self, obj):
+    #    return obj.blocked_user
 
 class UserEditSerializer(serializers.ModelSerializer):
     class Meta:
@@ -514,3 +517,9 @@ class ReportCreateSerializer(serializers.ModelSerializer):
         return obj.reporter.username
 
 
+class BlockedUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlockedUsers
+        fields = '__all__'
+
+    

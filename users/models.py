@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from .validators import CustomUsernameValidator
 
@@ -57,3 +58,15 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=CustomUser)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+class BlockedUsers(models.Model):
+    blocked_user = models.ForeignKeyField(CustomUser, related_name='blocked_user', on_delete=models.CASCADE, null=False)
+    blocker = models.ForeignKeyField(CustomUser, related_name='blocker', on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Blocked User"
+        verbose_name_plural = "Blocked Users"
+    
+    def __str__(self):
+        return 'user: {} - blocked: {}'.format(self.blocker.username, self.blocked_user.username)
