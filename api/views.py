@@ -511,10 +511,10 @@ class ReportCreateAPIView(generics.CreateAPIView):
 class GetBlockedUsersAPIView(generics.RetrieveAPIView):
     queryset = BlockedUsers.objects.all()
     serializer_class = BlockedUsersSerializer
-    permission_classes = [IsAuthenticated | IsAdminUser]
+    #permission_classes = [IsAuthenticated | IsAdminUser]
 
     def get_object(self):
-        obj = get_object_or_404(BlockedUsers, blocker=self.request.user)
+        obj = get_object_or_404(BlockedUsers, blocker=self.request.user).first()
         return obj
 
 class AddBlockedUserAPIView(generics.CreateAPIView):
