@@ -514,8 +514,11 @@ class GetBlockedUsersAPIView(generics.RetrieveAPIView):
     #permission_classes = [IsAuthenticated | IsAdminUser]
 
     def get_object(self):
-        obj = get_object_or_404(BlockedUsers, blocker=self.request.user).first()
-        return obj
+        #obj = get_object_or_404(BlockedUsers, blocker=self.request.user).first()
+        obj = BlockedUsers.objects.filter(blocker=self.request.user).first()
+        if (obj):
+            return obj
+        return None
 
 class AddBlockedUserAPIView(generics.CreateAPIView):
     queryset = BlockedUsers.objects.all()
