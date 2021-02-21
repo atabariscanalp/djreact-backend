@@ -60,8 +60,8 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class BlockedUsers(models.Model):
-    blocked_user = models.ForeignKeyField(CustomUser, related_name='blocked_user', on_delete=models.CASCADE, null=False)
-    blocker = models.ForeignKeyField(CustomUser, related_name='blocker', on_delete=models.CASCADE, null=False)
+    blocked_user = models.ForeignKey(CustomUser, related_name='blocked_user', on_delete=models.CASCADE, null=False)
+    blocker = models.ForeignKey(CustomUser, related_name='blocker', on_delete=models.CASCADE, null=False)
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
