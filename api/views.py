@@ -542,7 +542,7 @@ class DeleteBlockedUserAPIView(generics.DestroyAPIView):
     lookup_url_kwargs = ('user_id')
 
     def get_object(self):
-        obj = get_object_or_404(BlockedUsers, blocked_user__id=self.kwargs.get('user_id'))
+        obj = get_object_or_404(BlockedUsers, blocker__id=self.request.user.id, blocked_user__id=self.kwargs.get('user_id'))
         return obj
 
     def perform_create(self, instance):
