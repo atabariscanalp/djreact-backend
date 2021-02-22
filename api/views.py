@@ -15,6 +15,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.views.generic.base import TemplateView
+from django.http import Http404
 
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.serializers import LoginSerializer
@@ -531,6 +532,29 @@ class AddBlockedUserAPIView(generics.CreateAPIView):
         blocked_user = get_object_or_404(CustomUser, id=self.kwargs.get('user_id'))
         user = self.request.user
         serializer.save(blocker=user, blocked_user=blocked_user)
+
+class DeleteBlockedUserAPIView(generics.DestroyAPIView):
+    queryset = BlockedUsers.objects.all()
+    serializer_class = BlockedUsersSerializer
+    permission_classes = [IsAuthenticated | IsAdminUser]
+    lookup_field = ('blocked_user')
+    lookup_url_kwargs = ('user_id')
+
+    def get_object(self):
+        obj = get_object_or_404(BlockedUsers, blocked_user=self.kwargs.get('user_id'))
+        return obj
+
+    def perform_create(self, instance):
+        instance.delete()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        try:
+            self.perform_destroy(instance)
+        except Http404:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)        
+
 
 #FOR AUTHENTICATE USER AFTER PASSWORD RESET
 #CAN BE USED LATER

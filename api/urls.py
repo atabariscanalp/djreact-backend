@@ -26,7 +26,8 @@ from .views import (PostListAPIView,
                     GetPostCommentsAPIView,
                     ReportCreateAPIView,
                     GetBlockedUsersAPIView,
-                    AddBlockedUserAPIView)
+                    AddBlockedUserAPIView,
+                    DeleteBlockedUserAPIView)
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -62,6 +63,7 @@ urlpatterns = [
     path('user/edit/', UserEditAPIView.as_view(), name='user-edit'),
     path('user/blocked_users/', GetBlockedUsersAPIView.as_view(), name='blocked-users'),
     path('user/block/<int:user_id>', AddBlockedUserAPIView.as_view(), name='add-blocked-user'),
+    path('user/unblock/<int:user_id>', DeleteBlockedUserAPIView.as_view(), name='remove-blocked-user'),
     #TOKEN
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
