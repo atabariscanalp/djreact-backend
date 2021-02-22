@@ -524,7 +524,7 @@ class BlockedUsersSerializer(serializers.ModelSerializer):
         fields = ('blocked_users',)
 
     def get_blocked_users(self, obj):
-        queryset = BlockedUsers.objects.all().filter(blocker=self.request.user)
+        queryset = BlockedUsers.objects.all().filter(blocker__id=self.request.user.id)
         blocks = []
         for q in queryset:
             blocks.append(q.blocked_user.id)
