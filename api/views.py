@@ -54,7 +54,8 @@ from .serializers import (PostDetailSerializer,
                           ProfileLanguageUpdateSerializer,
                           FCMDeviceSerializer,
                           ReportCreateSerializer,
-                          BlockedUsersSerializer)
+                          BlockedUsersSerializer,
+                          AddBlockedUserSerializer)
 
 
 
@@ -523,7 +524,7 @@ class GetBlockedUsersAPIView(generics.RetrieveAPIView):
 
 class AddBlockedUserAPIView(generics.CreateAPIView):
     queryset = BlockedUsers.objects.all()
-    serializer_class = BlockedUsersSerializer
+    serializer_class = AddBlockedUserSerializer
     permission_classes = [IsAuthenticated | IsAdminUser]
     lookup_field = ('blocked_user')
     lookup_url_kwargs = ('user_id')
@@ -535,7 +536,7 @@ class AddBlockedUserAPIView(generics.CreateAPIView):
 
 class DeleteBlockedUserAPIView(generics.DestroyAPIView):
     queryset = BlockedUsers.objects.all()
-    serializer_class = BlockedUsersSerializer
+    serializer_class = AddBlockedUserSerializer
     permission_classes = [IsAuthenticated | IsAdminUser]
     lookup_field = ('blocked_user')
     lookup_url_kwargs = ('user_id')
