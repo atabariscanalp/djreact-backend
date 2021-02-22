@@ -521,7 +521,7 @@ class BlockedUsersSerializer(serializers.ModelSerializer):
     blocked_users = SerializerMethodField()
     class Meta:
         model = BlockedUsers
-        fields = ('blocked_users')
+        fields = ('blocked_users',)
 
     def get_blocked_users(self, obj):
         queryset = BlockedUsers.objects.all().filter(blocker=self.request.user)
@@ -535,4 +535,4 @@ class BlockedUsersSerializer(serializers.ModelSerializer):
 class AddBlockedUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlockedUsers
-        fields = ('blocked_user')
+        fields = ('blocked_user',)
