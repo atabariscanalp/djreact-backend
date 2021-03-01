@@ -24,13 +24,13 @@ from dj_rest_auth.views import (LoginView, LogoutView, PasswordChangeView,
                                 UserDetailsView)
 from dj_rest_auth.registration.views import (RegisterView, VerifyEmailView)
 
-from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView, DeleteFCMDeviceAPIView, PrivacyPolicyView, TermsAndConditionsView, EULAView
+from api.views import UserLoginAPIView, GetUserAPIView, UserRegisterAPIView, DeleteFCMDeviceAPIView, PrivacyPolicyView, TermsAndConditionsView, EULAView, AppAdsTxtView
 
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('atabarisadmin/', admin.site.urls),
     path('api/v1/', include('api.urls')),
     # path('auth/', include('dj_rest_auth.urls')),
     path('auth/register/', include('dj_rest_auth.registration.urls')),
@@ -44,6 +44,7 @@ urlpatterns = [
     path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy-policy'),
     path('terms-and-conditions/', TermsAndConditionsView.as_view(), name='terms-and-conditions'),
     path('end-user-license-agreement/', EULAView.as_view(), name='eula'),
+    path('app-ads.txt', AppAdsTxtView.as_view(), name='app-ads'),
 
 
     path('', include('django.contrib.auth.urls')),

@@ -497,6 +497,9 @@ class TermsAndConditionsView(TemplateView):
 class EULAView(TemplateView):
     template_name='termsANDpolicy/eula.html'    
 
+class AppAdsTxtView(TemplateView):
+    template_name='admob/app-ads.html'     
+
 class ReportCreateAPIView(generics.CreateAPIView):
     queryset = Report.objects.all()
     serializer_class = ReportCreateSerializer
